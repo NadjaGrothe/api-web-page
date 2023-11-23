@@ -27,22 +27,12 @@ const RecipeCard = ({ recipe }: { recipe: TRecipe }) => {
       label: 'Cuisine',
       children: recipe.cuisineType.map(cousine => capitalize(cousine)).join(', ') || 'N/A',
     },
-    {
-      key: 'dishType',
-      label: 'Dish Type',
-      children: recipe.dishType.map(dish => capitalize(dish)).join(', ') || 'N/A',
-    },
-    {
-      key: 'mealType',
-      label: 'Meal Type',
-      children: recipe.mealType.map(meal => capitalize(meal)).join(', ') || 'N/A',
-    },
   ];
 
   return (
-    // TODO: control width via Grid component
     <div style={{ width: 300 }}>
-      <Badge.Ribbon text={recipe.dietLabels}>
+      {/* //TODO: remove badge if no dietLabels exist */}
+      <Badge.Ribbon text={recipe.dietLabels.join(' & ')}>
         <Card
           cover={
             <img

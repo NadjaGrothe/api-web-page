@@ -11,13 +11,10 @@ export type TRecipe = {
   calories: number;
   cuisineType: string[];
   dietLabels: string[];
-  dishType: string[];
   image: string;
   ingredientLines: string[];
   label: string;
-  mealType: string[];
   totalTime: number;
-  uri: string;
   yield: number;
 };
 

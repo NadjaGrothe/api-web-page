@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import { ConfigProvider } from 'antd';
-import RecipeCard from './components/RecipeCard';
+import RecipeGrid from './components/RecipeGrid';
 import SearchBar from './components/SearchBar';
 import { TGetRecipesPayload } from './types/apiPayload';
 import axios from 'axios';
@@ -12,18 +12,15 @@ const FIELDS = [
   'calories',
   'cuisineType',
   'dietLabels',
-  'dishType',
   'image',
   'ingredientLines',
   'label',
-  'mealType',
   'totalTime',
-  'uri',
   'yield',
 ];
 
 function App() {
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState('chicken');
   const [data, setData] = useState<TGetRecipesPayload | undefined>();
 
   useEffect(() => {
@@ -44,12 +41,6 @@ function App() {
       });
   }, [query]);
 
-  // TODO remove
-  useEffect(() => {
-    // eslint-disable-next-line no-console
-    console.log(data);
-  }, [data]);
-
   const handleSearch = (value: string) => {
     setQuery(value);
   };
@@ -65,10 +56,8 @@ function App() {
       }}
     >
       <SearchBar onSearch={handleSearch} />
-      {/* {data?.hits.map(hit => (
-        <RecipeCard key={hit.recipe.uri} recipe={hit.recipe} />
-      ))} */}
-      {data?.hits[0] && <RecipeCard recipe={data?.hits[0].recipe} />}
+      {/* //TODO: add no results warning */}
+      {data?.hits && <RecipeGrid recipes={data?.hits} />}
     </ConfigProvider>
   );
 }
