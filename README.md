@@ -1,30 +1,57 @@
-# React + TypeScript + Vite
+# Api Web Page
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+### Table of Contents
 
-Currently, two official plugins are available:
+- [Introduction](#introduction)
+- [Built with](#built-with)
+- [Prerequisites](#prerequisites)
+- [Running the project](#running-the-project)
+- [Deployment](#deployment)
+- [Known Issues](#known-issues)
+- [Improvements](#improvements)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Introduction
 
-## Expanding the ESLint configuration
+This is a simple web page that consumes the [Edamam API](https://developer.edamam.com/edamam-docs-recipe-api) to search for recipes.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+### Built with
 
-- Configure the top-level `parserOptions` property like this:
+The project has been generated with the vite react typescript template. More information can be found [here](https://vitejs.dev/guide/).
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+It is using `yarn` as package manager and is running on the `v18.17.1` node version managed via `nvm`.
+
+### Prerequisites
+
+Assure nvm (node version manager) is installed locally. Steps how to do so can be found [here](https://www.freecodecamp.org/news/node-version-manager-nvm-install-guide/).
+
+Assure yarn is installed locally. Steps how to do so can be found [here](https://classic.yarnpkg.com/en/docs/install#mac-stable).
+
+Sign up to the [`Recipe Search API` by Edamam](https://developer.edamam.com/edamam-recipe-api) as a developer and create a new application in the [developer dashboard](https://developer.edamam.com/admin/applications).
+
+### Running the project
+
+Make a copy of the `.env.sample` file and rename it to `.env`. Add your Edamam Application ID and Applications key to the corresponding variables.
+
+Assure `nvm` is set-up locally and run
+
+```
+nvm use
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+Install dependencies
+
+```
+yarn
+```
+
+Run the project locally
+
+```
+yarn dev
+```
+
+### Deployment
+
+### Known Issues
+
+### Improvements
