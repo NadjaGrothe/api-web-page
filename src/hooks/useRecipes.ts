@@ -1,7 +1,8 @@
+import { useEffect, useState } from 'react';
+
 import { TGetRecipesPayload } from '../types/apiPayload';
 import axios from 'axios';
 import useSessionStorage from './useSessionStorage';
-import { useState } from 'react';
 
 const APP_ID = import.meta.env.VITE_EDAMAM_APP_ID;
 const APP_KEY = import.meta.env.VITE_EDAMAM_API_KEY;
@@ -37,18 +38,23 @@ const useRecipes = () => {
 
   const getRecipes = async (url: string) => {
     setLoading(true);
+    setError(false);
     try {
       const response = await axios.get(url);
       setRecipes(response.data.hits);
       window.sessionStorage.setItem('recipes', JSON.stringify(response.data.hits));
+
       setNextPageUrl(response.data._links?.next.href);
+
       setTotalResults(response.data.count);
       window.sessionStorage.setItem('totalResults', response.data.count.toString());
+
       setDisplayResults({ from: response.data.from, to: response.data.to });
       window.sessionStorage.setItem(
         'displayResults',
         JSON.stringify({ from: response.data.from, to: response.data.to }),
       );
+
       setLoading(false);
     } catch (error) {
       // TODO: improve error handling
@@ -57,30 +63,39 @@ const useRecipes = () => {
     }
   };
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [recipes]);
+
   const handleSearch = (value: string) => {
     setQuery(value);
+    window.sessionStorage.setItem('query', value);
+
     setNextPageUrl(undefined);
     setPrevPagesUrls([]);
     getRecipes(`${INITIAL_URL}&q=${value}`);
-    window.sessionStorage.setItem('query', value);
   };
 
   const handleNextPage = () => {
     if (!nextPageUrl) return;
+    // * The API does not return values for previous pages, so we need to store the urls manually. This is not ideal, but it works.
+
     if (prevPagesUrls.length === 0) {
+      // If the previous pages array is empty, it means we are on the first page, so we need to store the initial url and the next page url
       setPrevPagesUrls([`${INITIAL_URL}&q=${query}`, nextPageUrl]);
     } else {
+      // If the previous pages array is not empty, it means we are on a page after the first one, so we need to store only the next page url
       setPrevPagesUrls([...prevPagesUrls, nextPageUrl]);
     }
     getRecipes(nextPageUrl);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handlePrevPage = () => {
     if (!prevPagesUrls) return;
+    // The last url in the array is the current page, so we need to get the previous one (i.e. length -2)
     getRecipes(prevPagesUrls[prevPagesUrls.length - 2]);
+    // Remove the last url from the array
     setPrevPagesUrls(prevPagesUrls.slice(0, prevPagesUrls.length - 1));
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return {

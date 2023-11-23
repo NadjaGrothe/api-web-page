@@ -5,6 +5,7 @@ import { capitalize } from '../utils/format';
 
 const { Meta } = Card;
 
+// TODO: change card designs
 const RecipeCard = ({ recipe }: { recipe: TRecipe }) => {
   const descriptionItems: DescriptionsProps['items'] = [
     {

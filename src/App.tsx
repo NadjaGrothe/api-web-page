@@ -1,6 +1,6 @@
-import { Alert, Button, ConfigProvider, Empty, Space, Spin, Typography } from 'antd';
+import { Alert, ConfigProvider, Spin } from 'antd';
 
-import RecipeGrid from './components/RecipeGrid';
+import RecipeResultsContainer from './components/RecipeResultsContainer';
 import SearchBar from './components/SearchBar';
 import useRecipes from './hooks/useRecipes';
 
@@ -39,25 +39,15 @@ function App() {
           type="error"
         />
       )}
-      {/* //TODO: add no results warning */}
-      {recipes ? (
-        <>
-          <Typography.Title level={4}>
-            {totalResults} results found ({displayResults.from}-{displayResults.to})
-          </Typography.Title>
-          <RecipeGrid recipes={recipes} />
-          <Space>
-            <Button type="primary" disabled={prevPagesUrls.length <= 1} onClick={handlePrevPage}>
-              Previous Page
-            </Button>
-            <Button type="primary" disabled={!nextPageUrl} onClick={handleNextPage}>
-              Next Page
-            </Button>
-          </Space>
-        </>
-      ) : (
-        <Empty description="No results found" />
-      )}
+      <RecipeResultsContainer
+        recipes={recipes}
+        totalResults={totalResults}
+        displayResults={displayResults}
+        prevPageButtonDisabled={prevPagesUrls.length <= 1}
+        nextPageButtonDisabled={!nextPageUrl}
+        handleNextPage={handleNextPage}
+        handlePrevPage={handlePrevPage}
+      />
     </ConfigProvider>
   );
 }
