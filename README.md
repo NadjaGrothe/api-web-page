@@ -20,6 +20,8 @@ The project has been generated with the vite react typescript template. More inf
 
 It is using `yarn` as package manager and is running on the `v18.17.1` node version managed via `nvm`.
 
+Components are using the `Ant Design` library. More information can be found [here](https://ant.design/).
+
 ### Prerequisites
 
 Assure nvm (node version manager) is installed locally. Steps how to do so can be found [here](https://www.freecodecamp.org/news/node-version-manager-nvm-install-guide/).

@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
 
+import { ConfigProvider } from 'antd';
+import SearchBar from './components/SearchBar';
 import axios from 'axios';
 
 const APP_ID = import.meta.env.VITE_EDAMAM_APP_ID;
 const APP_KEY = import.meta.env.VITE_EDAMAM_API_KEY;
 
 function App() {
-  // TODO: set up search bar
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [query, setQuery] = useState('chicken');
+  const [query, setQuery] = useState('');
   const [data, setData] = useState(); // TODO type
 
   useEffect(() => {
@@ -32,7 +32,23 @@ function App() {
     console.log({ data });
   }, [data]);
 
-  return <h1>Hello World!</h1>;
+  const handleSearch = (value: string) => {
+    setQuery(value);
+  };
+
+  return (
+    <ConfigProvider
+      theme={{
+        token: {
+          colorPrimary: '#fa8c16',
+          colorInfo: '#fa8c16',
+          borderRadius: 5,
+        },
+      }}
+    >
+      <SearchBar onSearch={handleSearch} />
+    </ConfigProvider>
+  );
 }
 
 export default App;
