@@ -16,6 +16,7 @@ function App() {
     prevPagesUrls,
     recipes,
     totalResults,
+    query,
   } = useRecipes();
 
   return (
@@ -28,7 +29,7 @@ function App() {
         },
       }}
     >
-      <SearchBar onSearch={handleSearch} />
+      <SearchBar onSearch={handleSearch} query={query} />
       {/* // TODO: create Loading Skeleton based on the cards */}
       {loading && <Spin />}
       {error && (
