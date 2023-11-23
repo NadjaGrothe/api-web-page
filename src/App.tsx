@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import { ConfigProvider } from 'antd';
+import RecipeCard from './components/RecipeCard';
 import SearchBar from './components/SearchBar';
 import { TGetRecipesPayload } from './types/apiPayload';
 import axios from 'axios';
@@ -17,6 +18,7 @@ const FIELDS = [
   'label',
   'mealType',
   'totalTime',
+  'uri',
   'yield',
 ];
 
@@ -63,6 +65,10 @@ function App() {
       }}
     >
       <SearchBar onSearch={handleSearch} />
+      {/* {data?.hits.map(hit => (
+        <RecipeCard key={hit.recipe.uri} recipe={hit.recipe} />
+      ))} */}
+      {data?.hits[0] && <RecipeCard recipe={data?.hits[0].recipe} />}
     </ConfigProvider>
   );
 }

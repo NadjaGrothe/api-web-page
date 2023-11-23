@@ -13,11 +13,11 @@ export type TRecipe = {
   dietLabels: string[];
   dishType: string[];
   image: string;
-  // images: TImages;
   ingredientLines: string[];
   label: string;
   mealType: string[];
   totalTime: number;
+  uri: string;
   yield: number;
 };
 
@@ -33,22 +33,3 @@ type TPayloadLinks = {
     title: 'Next Page';
   };
 };
-
-// TODO: remove once confirmed not needed
-// type TImageSize<S extends number> = {
-//   height: S;
-//   url: string;
-//   width: S;
-// };
-
-// type TImageSizes = 'THUMBNAIL' | 'SMALL' | 'REGULAR' | 'LARGE';
-
-// type TImages = {
-//   [K in TImageSizes]?: K extends 'LARGE'
-//     ? TImageSize<600>
-//     : K extends 'REGULAR'
-//     ? TImageSize<300>
-//     : K extends 'SMALL'
-//     ? TImageSize<200>
-//     : TImageSize<100>;
-// };
