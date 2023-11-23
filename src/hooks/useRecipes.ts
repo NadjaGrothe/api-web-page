@@ -1,5 +1,6 @@
 import { TGetRecipesPayload } from '../types/apiPayload';
 import axios from 'axios';
+import useSessionStorage from './useSessionStorage';
 import { useState } from 'react';
 
 const APP_ID = import.meta.env.VITE_EDAMAM_APP_ID;
@@ -21,32 +22,18 @@ const INITIAL_URL = `https://api.edamam.com/api/recipes/v2?type=any&app_id=${APP
 // ! urls are not being stored in session storage as they would expose api credentials
 
 const useRecipes = () => {
-  const [displayResults, setDisplayResults] = useState(() => {
-    const displayResultsFromSessionStorage = window.sessionStorage.getItem('displayResults');
-    if (displayResultsFromSessionStorage) {
-      return JSON.parse(displayResultsFromSessionStorage);
-    }
-    return { from: 0, to: 0 };
-  });
+  const [displayResults, setDisplayResults] = useState({ from: 0, to: 0 });
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
   const [nextPageUrl, setNextPageUrl] = useState<string | undefined>();
   const [prevPagesUrls, setPrevPagesUrls] = useState<string[]>([]);
   const [query, setQuery] = useState(window.sessionStorage.getItem('query') || '');
-  const [recipes, setRecipes] = useState<TGetRecipesPayload['hits'] | undefined>(() => {
-    const recipesFromSessionStorage = window.sessionStorage.getItem('recipes');
-    if (recipesFromSessionStorage) {
-      return JSON.parse(recipesFromSessionStorage);
-    }
-    return undefined;
-  });
-  const [totalResults, setTotalResults] = useState(() => {
-    const totalResultsFromSessionStorage = window.sessionStorage.getItem('totalResults');
-    if (totalResultsFromSessionStorage) {
-      return JSON.parse(totalResultsFromSessionStorage);
-    }
-    return 0;
-  });
+  const [recipes, setRecipes] = useState<TGetRecipesPayload['hits'] | undefined>();
+  const [totalResults, setTotalResults] = useState(0);
+
+  useSessionStorage<{ from: number; to: number }>('displayResults', setDisplayResults);
+  useSessionStorage<TGetRecipesPayload['hits'] | undefined>('recipes', setRecipes);
+  useSessionStorage<number>('totalResults', setTotalResults);
 
   const getRecipes = async (url: string) => {
     setLoading(true);
@@ -79,7 +66,6 @@ const useRecipes = () => {
   };
 
   const handleNextPage = () => {
-    // TODO: implement scroll to top
     if (!nextPageUrl) return;
     if (prevPagesUrls.length === 0) {
       setPrevPagesUrls([`${INITIAL_URL}&q=${query}`, nextPageUrl]);
@@ -87,13 +73,14 @@ const useRecipes = () => {
       setPrevPagesUrls([...prevPagesUrls, nextPageUrl]);
     }
     getRecipes(nextPageUrl);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handlePrevPage = () => {
-    // TODO: implement scroll to top
     if (!prevPagesUrls) return;
     getRecipes(prevPagesUrls[prevPagesUrls.length - 2]);
     setPrevPagesUrls(prevPagesUrls.slice(0, prevPagesUrls.length - 1));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return {
