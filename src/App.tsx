@@ -1,49 +1,22 @@
-import { useEffect, useState } from 'react';
+import { Alert, Button, ConfigProvider, Empty, Space, Spin, Typography } from 'antd';
 
-import { ConfigProvider } from 'antd';
 import RecipeGrid from './components/RecipeGrid';
 import SearchBar from './components/SearchBar';
-import { TGetRecipesPayload } from './types/apiPayload';
-import axios from 'axios';
-
-const APP_ID = import.meta.env.VITE_EDAMAM_APP_ID;
-const APP_KEY = import.meta.env.VITE_EDAMAM_API_KEY;
-const FIELDS = [
-  'calories',
-  'cuisineType',
-  'dietLabels',
-  'image',
-  'ingredientLines',
-  'label',
-  'totalTime',
-  'yield',
-];
+import useRecipes from './hooks/useRecipes';
 
 function App() {
-  const [query, setQuery] = useState('chicken');
-  const [data, setData] = useState<TGetRecipesPayload | undefined>();
-
-  useEffect(() => {
-    if (!query) return;
-    axios
-      .get(
-        `https://api.edamam.com/api/recipes/v2?type=any&q=${query}&app_id=${APP_ID}&app_key=${APP_KEY}&field=${FIELDS.join(
-          '&field=',
-        )}`,
-      )
-      .then(response => {
-        setData(response.data);
-      })
-      .catch(error => {
-        // TODO add error handling
-        // eslint-disable-next-line no-console
-        console.log(error);
-      });
-  }, [query]);
-
-  const handleSearch = (value: string) => {
-    setQuery(value);
-  };
+  const {
+    displayResults,
+    error,
+    handleNextPage,
+    handlePrevPage,
+    handleSearch,
+    loading,
+    nextPageUrl,
+    prevPagesUrls,
+    recipes,
+    totalResults,
+  } = useRecipes();
 
   return (
     <ConfigProvider
@@ -56,8 +29,34 @@ function App() {
       }}
     >
       <SearchBar onSearch={handleSearch} />
+      {/* // TODO: create Loading Skeleton based on the cards */}
+      {loading && <Spin />}
+      {error && (
+        <Alert
+          message="Error"
+          description="An error occurred. Please try again later"
+          type="error"
+        />
+      )}
       {/* //TODO: add no results warning */}
-      {data?.hits && <RecipeGrid recipes={data?.hits} />}
+      {recipes ? (
+        <>
+          <Typography.Title level={4}>
+            {totalResults} results found ({displayResults.from}-{displayResults.to})
+          </Typography.Title>
+          <RecipeGrid recipes={recipes} />
+          <Space>
+            <Button type="primary" disabled={prevPagesUrls.length <= 1} onClick={handlePrevPage}>
+              Previous Page
+            </Button>
+            <Button type="primary" disabled={!nextPageUrl} onClick={handleNextPage}>
+              Next Page
+            </Button>
+          </Space>
+        </>
+      ) : (
+        <Empty description="No results found" />
+      )}
     </ConfigProvider>
   );
 }
